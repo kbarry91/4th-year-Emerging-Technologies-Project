@@ -3,6 +3,8 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+# dont include datafolder
+data/
 # C extensions
 *.so
 

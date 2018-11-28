@@ -6,7 +6,7 @@ import timeit
 # Import numpy as np
 import numpy as np
 
-def loadMnist():
+def loadMnistDataSet():
     """
     Loads Mnist Dataset
     """
@@ -18,9 +18,13 @@ def loadMnist():
     
     with gzip.open('data/train-labels-idx1-ubyte.gz', 'rb') as f:
         train_labels_content = f.read()   
-    
-    train_image = []
-    train_label = []
+
+    with gzip.open('data/t10k-images-idx3-ubyte.gz', 'rb') as f:
+        test_images = f.read()
+
+    with gzip.open('data/t10k-labels-idx1-ubyte.gz', 'rb') as f:
+        test_labels = f.read()
+
     imageSize = 784
     trainImageSize=len(train_images_content)
 
@@ -31,23 +35,12 @@ def loadMnist():
     # Start timer
    # start_time_train = timeit.default_timer()
 
-    #Performance tweeks
-    appendI = train_image.append
-    appendL = train_label.append
 
-    # Iterate through file
-    while (i < trainImageSize): 
-        # Add image to array
-        appendI(~np.array(list(train_images_content[i:i+imageSize])).reshape(28,28).astype(np.uint8))
-        # Add label to array
-        appendL(int.from_bytes(train_labels_content[j:j+1], byteorder="big"))
-    
-        i += imageSize
-        j += 1
 
+   
     # Stop Timer
    # timeTakenTrain = timeit.default_timer() - start_time_train
-
+"""
     # test for correct values
     i = 0
     for i in range(2):
@@ -60,6 +53,6 @@ def loadMnist():
                 else:
                     print(".", end="")
    
-    print("\nCorresponding Label :",train_label[i])  
+   """
 
-loadMnist()
+loadMnistDataSet()

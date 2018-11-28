@@ -7,7 +7,8 @@ import timeit
 # Import numpy as np
 import numpy as np
 # Import tensorflow as tf
-#import tensorflow as tf
+import tensorflow as tf
+from tensorflow.examples.tutorials.mnist import input_data
 
 def loadMnistDataSet():
     """
@@ -18,9 +19,9 @@ def loadMnistDataSet():
     # Unzip and open training image and label file for reading
     with gzip.open('data/train-images-idx3-ubyte.gz', 'rb') as f:
         train_images = f.read()
-    
+
     with gzip.open('data/train-labels-idx1-ubyte.gz', 'rb') as f:
-        train_labels = f.read()   
+        train_labels = f.read()
 
     with gzip.open('data/t10k-images-idx3-ubyte.gz', 'rb') as f:
         test_images = f.read()
@@ -30,20 +31,21 @@ def loadMnistDataSet():
 
     imageSize = 784
 
-    # i,j act as offsets to offest idx format 
-    imageOffest=16
-    labelOffset=8
+    # i,j act as offsets to offest idx format
+    imageOffest = 16
+    labelOffset = 8
 
     # reshape the images and labels.
-    train_images = ~np.array(list(train_images[imageOffest:])).reshape(60000, 1, imageSize).astype(np.uint8)
-    train_labels = np.array(list(train_labels[ labelOffset:])).astype(np.uint8)
+    train_images = ~np.array(list(train_images[imageOffest:])).reshape(
+        60000, 1, imageSize).astype(np.uint8)
+    train_labels = np.array(list(train_labels[labelOffset:])).astype(np.uint8)
 
-    test_images = ~np.array(list(test_images[imageOffest:])).reshape(10000, imageSize).astype(np.uint8) / 255.0
-    test_labels = np.array(list(test_labels[ labelOffset:])).astype(np.uint8)
+    test_images = ~np.array(list(test_images[imageOffest:])).reshape(
+        10000, imageSize).astype(np.uint8) / 255.0
+    test_labels = np.array(list(test_labels[labelOffset:])).astype(np.uint8)
     print("Loading Mnist Complete!")
     # Start timer
    # start_time_train = timeit.default_timer()
-
 
     # Stop Timer
    # timeTakenTrain = timeit.default_timer() - start_time_train
@@ -61,28 +63,34 @@ def loadMnistDataSet():
                     print(".", end="")
    
    """
+
+
 def buildNeuralNet():
-    print("Building NeuralNetwork")
+    print("Building Deep Neural Network Classification...")
 
 
-choice=True
-while choice:
-    print ("""
-    ==== MNIST DATASET DIDIT RECOGNITION ====
-    1.loadMnistDataSet
-    2.buildNeuralNet
-    3.Exit
-    """)
-    choice=input("What would you like to do? ") 
-    if choice=="1": 
-      loadMnistDataSet()
-    elif choice=="2":
-      buildNeuralNet()
-    elif choice=="3":
-      print("\n Exiting...")
-      exit()
-    elif choice !="":
-      print("\n Invalid Option Try again") 
+def userMenu():
+    """
+    Launches a User menu
+    """
+    choice = True
+    while choice:
+        print("""
+        ==== MNIST DATASET DIDIT RECOGNITION ====
+        1.loadMnistDataSet
+        2.buildNeuralNet
+        3.Exit
+        """)
+        choice = input("Enter Selction? ")
+        if choice == "1":
+            loadMnistDataSet()
+        elif choice == "2":
+            buildNeuralNet()
+        elif choice == "3":
+            print("\n Exiting...")
+            exit()
+        elif choice != "":
+             print("\n Invalid Option Try again")
 
-loadMnistDataSet()
-buildNeuralNet()
+
+userMenu()

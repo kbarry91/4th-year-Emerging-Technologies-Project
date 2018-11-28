@@ -3,8 +3,10 @@
 # Must import gzip to allow pyhton to read  and uncompress zip files
 import gzip
 import timeit
+
 # Import numpy as np
 import numpy as np
+
 
 def loadMnistDataSet():
     """
@@ -14,10 +16,10 @@ def loadMnistDataSet():
 
     # Unzip and open training image and label file for reading
     with gzip.open('data/train-images-idx3-ubyte.gz', 'rb') as f:
-        train_images_content = f.read()
+        train_images = f.read()
     
     with gzip.open('data/train-labels-idx1-ubyte.gz', 'rb') as f:
-        train_labels_content = f.read()   
+        train_labels = f.read()   
 
     with gzip.open('data/t10k-images-idx3-ubyte.gz', 'rb') as f:
         test_images = f.read()
@@ -26,12 +28,18 @@ def loadMnistDataSet():
         test_labels = f.read()
 
     imageSize = 784
-    trainImageSize=len(train_images_content)
 
     # i,j act as offsets to offest idx format 
-    i=16
-    j=8
+    imageOffest=16
+    labelOffset=8
 
+    # reshape the images and labels.
+    train_images = ~np.array(list(train_images[imageOffest:])).reshape(60000, 1, imageSize).astype(np.uint8)
+    train_labels = np.array(list(train_labels[ labelOffset:])).astype(np.uint8)
+
+    test_images = ~np.array(list(test_images[imageOffest:])).reshape(10000, imageSize).astype(np.uint8) / 255.0
+    test_labels = np.array(list(test_labels[ labelOffset:])).astype(np.uint8)
+    print("Loading Mnist Complete!")
     # Start timer
    # start_time_train = timeit.default_timer()
 

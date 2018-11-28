@@ -21,21 +21,24 @@ from keras.optimizers import RMSprop
 
 # load dataset
 (image_train, label_train), (image_test, label_test) = mnist.load_data()
+labelOptions = 10
+imageSize = 784
 
 def prepareDataSet():
+    """ 
+    Loads Mnist Dataset
+    """
     global image_train
     global image_test
     global label_train
     global label_test 
-    """ 
-    Loads Mnist Dataset
-    """
+    
     print("Preparing Mnist...")
     #  (image_train, label_train), (image_test, label_test) = mnist.load_data()
    
 
-    imageSize = 784
-    labelOptions = 10
+   
+    
     # i,j act as offsets to offest idx format
     imageOffest = 16
     labelOffset = 8
@@ -85,20 +88,45 @@ def prepareDataSet():
    """
 
 
-def buildModel():
+def buildNeuralNet():
     print("Building Model...")
+    batch_size = 128
+    #num_classes = 10
+    epochs = 2
 
-    # Load the mnist dataset 
-   # mnist = input_data.read_data_sets('data')
-    #print("\n MNIST successfully Loaded....")
+    model = Sequential() #Linear stack of layers
+    model.add(Dense(512, activation='relu', input_shape=(784,)))# add layer off input shape 784 and output shape of *532
+    model.add(Dropout(0.2))# set fraction of input rates to drop during training
+    model.add(Dense(512, activation='relu'))
+    model.add(Dropout(0.2))
+    model.add(Dense(labelOptions, activation='softmax'))
 
-    # return images and labells as a 32 bit integer numpy array
-  #  def input(dataset):
-     #   return dataset.images, dataset.labels.astype(np.int32)
+    # Print a string summary of the model
+    model.summary()
 
-    # Specify the features
-    # MNIST images have shape 28px x 28px, so we can define one feature with shape [28, 28]
+    # Configure model for training 
+    # loss = name of objective function
+    # metrics list of metrics to be evaluated by the model
+    """
+    From https://towardsdatascience.com/a-look-at-gradient-descent-and-rmsprop-optimizers-f77d483ef08b
+    The RMSprop optimizer is similar to the gradient descent algorithm with momentum.
+    The RMSprop optimizer restricts the oscillations in the vertical direction.
+    To prevent the gradients from blowing up, we include a parameter epsilon in the denominator which is set to a small value
+    """
+    model.compile(loss='categorical_crossentropy',
+                optimizer=RMSprop(),
+                metrics=['accuracy'])
 
+    # Train the model
+    # verbose 1 displays progress bar
+    history = model.fit(image_train, label_train,
+                        batch_size=batch_size,
+                        epochs=epochs,
+                        verbose=1,
+                        validation_data=(image_test, label_test))
+    score = model.evaluate(image_test, label_test, verbose=0)
+    print('Test loss:', score[0])
+    print('Test accuracy:', score[1])
 
 def userMenu():
    # print("tf-----",tf.__version__)
@@ -112,12 +140,12 @@ def userMenu():
         choice = input("Select Option? ")
         if choice == "1":
             prepareDataSet()
-            buildModel()
-        elif choice == "2":
             buildNeuralNet()
+        elif choice == "2":
+            # buildNeuralNet()
+            print("\n In choice 2...")
         elif choice == "3":
             print("\n Exiting...")
-            print ("In exit s--",label_test)
             exit()
         elif choice != "":
              print("\n Invalid Option Try again")

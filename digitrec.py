@@ -19,7 +19,7 @@ from keras.models import Sequential
 from keras.layers import Dense, Dropout
 from keras.optimizers import RMSprop
 
-def loadMnistDataSet():
+def loadMnistDataSetup():
     """
     Loads Mnist Dataset
     """
@@ -27,13 +27,32 @@ def loadMnistDataSet():
     (image_train, label_train), (image_test, label_test) = mnist.load_data()
 
     imageSize = 784
-
+    labelOptions = 10
     # i,j act as offsets to offest idx format
     imageOffest = 16
     labelOffset = 8
 
-   
-    print("Loading Mnist Complete!")
+    # Reshape image data set
+    image_train = image_train.reshape(60000, imageSize)
+    image_test = image_test.reshape(10000, imageSize)
+
+    # Convert image data to type float 32
+    image_train = image_train.astype('float32')
+    image_test = image_test.astype('float32')
+
+    # Values are rgb 0-255 . Convert to  0 OR  1
+    image_train /= 255
+    image_test /= 255
+
+    # convert class vectors to binary class matrices
+    label_train = keras.utils.to_categorical(label_train, labelOptions)
+    label_test = keras.utils.to_categorical(label_test, labelOptions)
+    print (label_test)
+    
+    # Output Statistics
+    print(image_train.shape[0], 'training images loaded.')
+    print(image_test.shape[0], 'test images loaded.')
+    print("Loading Mnist data Complete!")
     # Start timer
    # start_time_train = timeit.default_timer()
 
@@ -78,15 +97,10 @@ def userMenu():
     """
     choice = True
     while choice:
-        print("""
-        ==== MNIST DATASET DIDIT RECOGNITION ====
-        1.loadMnistDataSet
-        2.buildNeuralNet
-        3.Exit
-        """)
-        choice = input("Enter Selction? ")
+        print("==== MNIST DATASET DIDIT RECOGNITION ====\n1.Load and Setup image dataset\n2.buildNeuralNet\n3.Exit")
+        choice = input("Select Option? ")
         if choice == "1":
-            loadMnistDataSet()
+            loadMnistDataSetup()
         elif choice == "2":
             buildNeuralNet()
         elif choice == "3":

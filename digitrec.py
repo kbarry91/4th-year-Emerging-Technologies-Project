@@ -19,12 +19,20 @@ from keras.models import Sequential
 from keras.layers import Dense, Dropout
 from keras.optimizers import RMSprop
 
-def loadMnistDataSetup():
-    """
+# load dataset
+(image_train, label_train), (image_test, label_test) = mnist.load_data()
+
+def prepareDataSet():
+    global image_train
+    global image_test
+    global label_train
+    global label_test 
+    """ 
     Loads Mnist Dataset
     """
-    print("Loading Mnist...")
-    (image_train, label_train), (image_test, label_test) = mnist.load_data()
+    print("Preparing Mnist...")
+    #  (image_train, label_train), (image_test, label_test) = mnist.load_data()
+   
 
     imageSize = 784
     labelOptions = 10
@@ -45,6 +53,8 @@ def loadMnistDataSetup():
     image_test /= 255
 
     # convert class vectors to binary class matrices
+    #A binary matrix representation of the input. The classes axis is placed last. 
+    # Used for  categorical_crossentropy loss on model
     label_train = keras.utils.to_categorical(label_train, labelOptions)
     label_test = keras.utils.to_categorical(label_test, labelOptions)
     print (label_test)
@@ -52,12 +62,13 @@ def loadMnistDataSetup():
     # Output Statistics
     print(image_train.shape[0], 'training images loaded.')
     print(image_test.shape[0], 'test images loaded.')
-    print("Loading Mnist data Complete!")
+    print("Preparing Mnist data Complete!")
+    
     # Start timer
-   # start_time_train = timeit.default_timer()
+    # start_time_train = timeit.default_timer()
 
     # Stop Timer
-   # timeTakenTrain = timeit.default_timer() - start_time_train
+    # timeTakenTrain = timeit.default_timer() - start_time_train
     """
     # test for correct values
     i = 0
@@ -74,8 +85,8 @@ def loadMnistDataSetup():
    """
 
 
-def buildNeuralNet():
-    print("Building Deep Neural Network Classification...")
+def buildModel():
+    print("Building Model...")
 
     # Load the mnist dataset 
    # mnist = input_data.read_data_sets('data')
@@ -97,17 +108,19 @@ def userMenu():
     """
     choice = True
     while choice:
-        print("==== MNIST DATASET DIDIT RECOGNITION ====\n1.Load and Setup image dataset\n2.buildNeuralNet\n3.Exit")
+        print("==== MNIST DATASET DIDIT RECOGNITION ====\n1.Prepare and Setup image dataset\n2.buildNeuralNet\n3.Exit")
         choice = input("Select Option? ")
         if choice == "1":
-            loadMnistDataSetup()
+            prepareDataSet()
+            buildModel()
         elif choice == "2":
             buildNeuralNet()
         elif choice == "3":
             print("\n Exiting...")
+            print ("In exit s--",label_test)
             exit()
         elif choice != "":
              print("\n Invalid Option Try again")
 
-
+# Launch the main menu
 userMenu()

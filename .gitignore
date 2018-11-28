@@ -5,6 +5,8 @@ __pycache__/
 
 # dont include datafolder
 data/
+MNIST_data
+
 # C extensions
 *.so
 

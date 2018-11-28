@@ -7,27 +7,24 @@ import timeit
 # Import numpy as np
 import numpy as np
 # Import tensorflow as tf
-import tensorflow as tf
-from tensorflow.examples.tutorials.mnist import input_data
+#import tensorflow as tf
+#from tensorflow.examples.tutorials.mnist import input_data
+
+
+# https://github.com/keras-team/keras/blob/master/examples/mnist_mlp.py
+
+import keras
+from keras.datasets import mnist
+from keras.models import Sequential
+from keras.layers import Dense, Dropout
+from keras.optimizers import RMSprop
 
 def loadMnistDataSet():
     """
     Loads Mnist Dataset
     """
-    print("Loading Mnist !")
-
-    # Unzip and open training image and label file for reading
-    with gzip.open('data/train-images-idx3-ubyte.gz', 'rb') as f:
-        train_images = f.read()
-
-    with gzip.open('data/train-labels-idx1-ubyte.gz', 'rb') as f:
-        train_labels = f.read()
-
-    with gzip.open('data/t10k-images-idx3-ubyte.gz', 'rb') as f:
-        test_images = f.read()
-
-    with gzip.open('data/t10k-labels-idx1-ubyte.gz', 'rb') as f:
-        test_labels = f.read()
+    print("Loading Mnist...")
+    (image_train, label_train), (image_test, label_test) = mnist.load_data()
 
     imageSize = 784
 
@@ -35,14 +32,7 @@ def loadMnistDataSet():
     imageOffest = 16
     labelOffset = 8
 
-    # reshape the images and labels.
-    train_images = ~np.array(list(train_images[imageOffest:])).reshape(
-        60000, 1, imageSize).astype(np.uint8)
-    train_labels = np.array(list(train_labels[labelOffset:])).astype(np.uint8)
-
-    test_images = ~np.array(list(test_images[imageOffest:])).reshape(
-        10000, imageSize).astype(np.uint8) / 255.0
-    test_labels = np.array(list(test_labels[labelOffset:])).astype(np.uint8)
+   
     print("Loading Mnist Complete!")
     # Start timer
    # start_time_train = timeit.default_timer()
@@ -68,8 +58,21 @@ def loadMnistDataSet():
 def buildNeuralNet():
     print("Building Deep Neural Network Classification...")
 
+    # Load the mnist dataset 
+   # mnist = input_data.read_data_sets('data')
+    #print("\n MNIST successfully Loaded....")
+
+    # return images and labells as a 32 bit integer numpy array
+  #  def input(dataset):
+     #   return dataset.images, dataset.labels.astype(np.int32)
+
+    # Specify the features
+    # MNIST images have shape 28px x 28px, so we can define one feature with shape [28, 28]
+
 
 def userMenu():
+   # print("tf-----",tf.__version__)
+   # print("ker---",keras.__version__)
     """
     Launches a User menu
     """

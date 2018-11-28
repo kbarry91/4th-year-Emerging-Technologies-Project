@@ -6,7 +6,8 @@ import timeit
 
 # Import numpy as np
 import numpy as np
-
+# Import tensorflow as tf
+#import tensorflow as tf
 
 def loadMnistDataSet():
     """
@@ -44,11 +45,9 @@ def loadMnistDataSet():
    # start_time_train = timeit.default_timer()
 
 
-
-   
     # Stop Timer
    # timeTakenTrain = timeit.default_timer() - start_time_train
-"""
+    """
     # test for correct values
     i = 0
     for i in range(2):
@@ -62,5 +61,28 @@ def loadMnistDataSet():
                     print(".", end="")
    
    """
+def buildNeuralNet():
+    print("Building NeuralNetwork")
+
+
+choice=True
+while choice:
+    print ("""
+    ==== MNIST DATASET DIDIT RECOGNITION ====
+    1.loadMnistDataSet
+    2.buildNeuralNet
+    3.Exit
+    """)
+    choice=input("What would you like to do? ") 
+    if choice=="1": 
+      loadMnistDataSet()
+    elif choice=="2":
+      buildNeuralNet()
+    elif choice=="3":
+      print("\n Exiting...")
+      exit()
+    elif choice !="":
+      print("\n Invalid Option Try again") 
 
 loadMnistDataSet()
+buildNeuralNet()

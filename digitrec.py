@@ -26,6 +26,9 @@ from PIL import Image
 
 # Import load model to save model
 from keras.models import load_model
+# Import os path to read file
+import os.path
+
 # load dataset for global use
 (image_train, label_train), (image_test, label_test) = mnist.load_data()
 labelOptions = 10
@@ -98,7 +101,7 @@ def buildNeuralNet():
     batch_size = 128
     #num_classes = 10
     
-   
+
     # Using Sequental ,Linear stack of layers
     # Add layer off input shape 784 and output shape of *532
     # Set fraction of input rates to drop during training
@@ -269,11 +272,16 @@ def userMenu():
     """
     Launches a menu for user input
     """
-
+    
     # print("tf-----",tf.__version__)
     # print("ker---",keras.__version__)
-    netBuilt = True
+    # Confirm if a saved model can be loaded
+    netBuilt = False
     choice = True
+
+    if os.path.isfile("my_model"):
+        netBuilt = True
+    
 
     # Prepare the test data set
     prepareDataSet()

@@ -2,11 +2,11 @@
 __pycache__/
 *.py[cod]
 *$py.class
-
+# Ignore Saved model files
+/nn_model
 # dont include datafolder
 data/
 MNIST_data
-
 # C extensions
 *.so
 

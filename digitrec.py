@@ -24,8 +24,9 @@ from keras.optimizers import RMSprop
 import cv2
 from PIL import Image
 
-# Import load model to save model
+# Import load_models to save model
 from keras.models import load_model
+
 # Import os path to read file
 import os.path
 
@@ -155,7 +156,7 @@ def buildNeuralNet():
     print("Time Taken to train model at ", epochs, "epochs =", end_time_train)
   
     # Creates a file 'my_model.' to savwe model
-    model.save('my_model')
+    model.save('models/nn_model')
 
 
 def prediction():
@@ -197,7 +198,7 @@ def prediction():
             #score = model.predict(img, batch_size=1, verbose=0)
             
             # Load model
-            model = load_model('my_model')
+            model = load_model('models/nn_model')
             predictionB = model.predict(np.array(img, dtype=float))
 
             print("Predicted B: ", predictionB)
@@ -253,7 +254,7 @@ def testPrediction():
             
     testIndex = int(testIndex-1)
     # Load model
-    model = load_model('my_model')
+    model = load_model('models/nn_model')
     predictionB = model.predict(np.array([image_test[testIndex]], dtype=float))
 
     # Get value of closest(MAX) prediction
@@ -265,7 +266,7 @@ def testPrediction():
 
     # Print Prediction results
     print("\nPrediction Complete")
-    print("System Predicted image is :",predIndex ,",With a accurucy of ",predAccuracy )
+    print("System Predicted image is :",predIndex ,",With a accuracy of ",predAccuracy )
     print("Actual Image is: ", actIndex)
 
 def userMenu():
@@ -279,7 +280,7 @@ def userMenu():
     netBuilt = False
     choice = True
 
-    if os.path.isfile("my_model"):
+    if os.path.isfile('models/nn_model'):
         netBuilt = True
     
 

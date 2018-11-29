@@ -24,6 +24,8 @@ from keras.optimizers import RMSprop
 import cv2
 from PIL import Image
 
+# Import load model to save model
+from keras.models import load_model
 # load dataset for global use
 (image_train, label_train), (image_test, label_test) = mnist.load_data()
 labelOptions = 10
@@ -39,7 +41,7 @@ def prepareDataSet():
     global label_train
     global label_test
 
-    print("Preparing Mnist...")
+    print("\nPreparing Mnist dataset...")
     #  (image_train, label_train), (image_test, label_test) = mnist.load_data()
 
     # i,j act as offsets to offest idx format
@@ -148,6 +150,9 @@ def buildNeuralNet():
     print('Test loss    :', score[0])
     print('Test accuracy:', score[1])
     print("Time Taken to train model at ", epochs, "epochs =", end_time_train)
+  
+    # Creates a file 'my_model.' to savwe model
+    model.save('my_model')
 
 
 def prediction():
@@ -187,6 +192,9 @@ def prediction():
 
             # predict the handwritten digit in the input image
             #score = model.predict(img, batch_size=1, verbose=0)
+            
+            # Load model
+            model = load_model('my_model')
             predictionB = model.predict(np.array(img, dtype=float))
 
             print("Predicted B: ", predictionB)
@@ -243,13 +251,15 @@ def testPrediction():
             #buildNeuralNet()
 
     testIndex = int(testIndex-1)
+    # Load model
+    model = load_model('my_model')
     predictionB = model.predict(np.array([image_test[testIndex]], dtype=float))
 
     # Get value of closest(MAX) prediction
     predAccuracy = max(predictionB[0])
     # Get index of closest(MAX) prediction
     predIndex = predictionB.argmax(axis=1)
-    
+
     #print(predictionB[0])
     print("System Predicted image is :",predIndex ,",With a accurucy of ",predAccuracy )
     print("Predicted B: ", predictionB)
@@ -271,8 +281,11 @@ def userMenu():
 
     # print("tf-----",tf.__version__)
     # print("ker---",keras.__version__)
-    netBuilt = False
+    netBuilt = True
     choice = True
+
+    # Prepare the test data set
+    prepareDataSet()
 
     while choice:
         print("\n==== MNIST DATASET DIGIT RECOGNITION ====\n1.Prepare Dataset and Image Recognition Model\n2.Upload an Image to predict\n3.Predict image from MNIST test dataset\n4.Exit")
@@ -281,7 +294,6 @@ def userMenu():
             if netBuilt:
                 print("Neural network has already been configured")
             else:
-                prepareDataSet()
                 buildNeuralNet()
                 netBuilt = True
         elif choice == "2":

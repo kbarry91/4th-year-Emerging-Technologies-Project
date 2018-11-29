@@ -164,7 +164,7 @@ def prediction():
             print("Returning to main menu...")
             break
         
-        img = Image.open("testImages/"+menuOption )
+        img = np.invert(Image.open("testImages/"+menuOption ))
         '''
             if(len(sys.argv) == 2):
                 img = cv2.imread(sys.argv[1])
@@ -181,19 +181,23 @@ def prediction():
         img /= 255
 
         # predict the handwritten digit in the input image
-        score = model.predict(img, batch_size=1, verbose=0)
+        #score = model.predict(img, batch_size=1, verbose=0)
+        predictionB = model.predict(np.array(img, dtype=float))
+        print("Predicted B: ", predictionB)
+        #print("Actual: B", label_test[0])
 
         # display scores
-        print("\nPrediction score for test input: " + sys.argv[1])
-        sort = sorted(range(len(score[0])),
-                    key=lambda k: score[0][k], reverse=True)
+        print("\nPrediction score for test input: " + menuOption)
+        
+        sort = sorted(range(len(predictionB[0])),
+                    key=lambda k: predictionB[0][k], reverse=True)
         for index in sort:
-            print(str(index) + ": " + str(score[0][index]))
-        percent = format(score[0][sort[0]] * 100, '.2f')
+            print(str(index) + ": " + str(predictionB[0][index]))
+        percent = format(predictionB[0][sort[0]] * 100, '.2f')
 
 
         print("\nI am " ,str(percent) ,"Confident that it is " ,str(sort[0]))
-    
+        
 
 def testPrediction():
     predictionB = model.predict(np.array([image_test[0]], dtype=float))

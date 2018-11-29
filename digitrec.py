@@ -7,7 +7,6 @@ import timeit
 # Import numpy as np
 import numpy as np
 
-
 import sys
 # Import tensorflow as tf
 #import tensorflow as tf
@@ -21,8 +20,10 @@ from keras.datasets import mnist
 from keras.models import Sequential
 from keras.layers import Dense, Dropout
 from keras.optimizers import RMSprop
-# Import Cv2 for image processing
+# Import Cv2  and Imagefor image processing
 import cv2
+from PIL import Image
+
 # load dataset for global use
 (image_train, label_train), (image_test, label_test) = mnist.load_data()
 labelOptions = 10
@@ -151,7 +152,47 @@ def buildNeuralNet():
 
 
 def prediction():
-    print("pr")
+    
+    menuOption="\nPlease enter an image name to test(Do not enter file extension) or 'quit' to return: "
+    print(menuOption)
+    while menuOption != "exit":
+        # Get user input
+        menuOption= input("Image Name :")
+
+        # check for exit condition
+        if menuOption=="exit":
+            print("Returning to main menu...")
+            break
+        
+        img = Image.open("testImages/"+menuOption )
+        '''
+            if(len(sys.argv) == 2):
+                img = cv2.imread(sys.argv[1])
+                if(not img.data):
+                    print("Could not load image")
+                    exit
+        '''
+        # preprocessing
+        img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+        img = cv2.resize(img, (28, 28), interpolation=cv2.INTER_AREA)
+        img = cv2.bitwise_not(img)
+        img = img.reshape(1, 784)
+        img = img.astype('float32')
+        img /= 255
+
+        # predict the handwritten digit in the input image
+        score = model.predict(img, batch_size=1, verbose=0)
+
+        # display scores
+        print("\nPrediction score for test input: " + sys.argv[1])
+        sort = sorted(range(len(score[0])),
+                    key=lambda k: score[0][k], reverse=True)
+        for index in sort:
+            print(str(index) + ": " + str(score[0][index]))
+        percent = format(score[0][sort[0]] * 100, '.2f')
+
+
+        print("\nI am " ,str(percent) ,"Confident that it is " ,str(sort[0]))
     
 
 def testPrediction():
@@ -179,7 +220,7 @@ def userMenu():
     choice = True
 
     while choice:
-        print("\n==== MNIST DATASET DIGIT RECOGNITION ====\n1.Prepare and Setup image dataset\n2.Predict an image\n3.Test & confirm Prediction Model\n4.Exit")
+        print("\n==== MNIST DATASET DIGIT RECOGNITION ====\n1.Prepare Dataset and Image Recognition Model\n2.Predict an image\n3.Test & confirm Prediction Model\n4.Exit")
         choice = input("Select Option? ")
         if choice == "1":
             if netBuilt:

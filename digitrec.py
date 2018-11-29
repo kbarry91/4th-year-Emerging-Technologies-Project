@@ -92,12 +92,31 @@ def prepareDataSet():
 
 
 def buildNeuralNet():
+    """
+    buildNeuralNet allows a user to enter an image to predict using the prebuilt model.
+    User may select amount of epoch iterations.
+    User must enter image name eg . xxx.png
+    """
+    menuOption = 0
+    # Allow user to enter amount for epoch
+    while int(menuOption) < 1 or int(menuOption) > 20:
+        menuOption= input("Select amount of steps (epochs 1-20) :")
 
+        # Confirm input is integer
+        try :
+            menuOption = int(menuOption)
+        except ValueError:
+            print("Error - value must be an integer")
+            menuOption=0
+            #buildNeuralNet()
+
+    epochs = int(menuOption)
+   
     global model
     global score
     batch_size = 128
     #num_classes = 10
-    epochs = 1
+    #epochs = 1
     #learning_rate = 1e-6
     model = Sequential()  # Using Sequental ,Linear stack of layers
     # add layer off input shape 784 and output shape of *532
@@ -209,6 +228,7 @@ def prediction():
         
 
 def testPrediction():
+
     predictionB = model.predict(np.array([image_test[0]], dtype=float))
     print("Predicted B: ", predictionB)
     print("Actual: B", label_test[0])

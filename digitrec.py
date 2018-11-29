@@ -32,7 +32,7 @@ imageSize = 784
 
 def prepareDataSet():
     """ 
-    Loads Mnist Dataset
+    Loads Mnist Dataset into memory and prepares images to for generation of Neural Network model.
     """
     global image_train
     global image_test
@@ -70,27 +70,6 @@ def prepareDataSet():
     print(image_test.shape[0], 'test images loaded.')
     print("Preparing Mnist data Complete!")
 
-    # Start timer
-    # start_time_train = timeit.default_timer()
-
-    # Stop Timer
-    # timeTakenTrain = timeit.default_timer() - start_time_train
-    """
-    # test for correct values
-    i = 0
-    for i in range(2):
-    
-        for x in train_image[i]:
-            print()
-            for y in x:
-                if(y != 255):
-                    print("#", end="")
-                else:
-                    print(".", end="")
-   
-   """
-
-
 def buildNeuralNet():
     """
     buildNeuralNet allows a user to enter an image to predict using the prebuilt model.
@@ -106,7 +85,7 @@ def buildNeuralNet():
         try :
             menuOption = int(menuOption)
         except ValueError:
-            print("Error - value must be an integer")
+            print("(ERROR)--> Value must be an integer")
             menuOption=0
             #buildNeuralNet()
 
@@ -172,7 +151,10 @@ def buildNeuralNet():
 
 
 def prediction():
-    
+    """
+    prediction() converts a user entered image to a numpy array and predicts its outcome.
+    image to upload must be located in "testImages/" directory.
+    """
     menuOption="\nPlease enter an image name to test or (exit) to return: "
     print(menuOption)
     while menuOption != "exit":
@@ -184,49 +166,60 @@ def prediction():
             print("Returning to main menu...")
             break
         
-        img = np.invert(Image.open("testImages/"+menuOption ))
-        '''
-            if(len(sys.argv) == 2):
-                img = cv2.imread(sys.argv[1])
-                if(not img.data):
-                    print("Could not load image")
-                    exit
-        '''
-        # preprocessing
-        img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-        img = cv2.resize(img, (28, 28), interpolation=cv2.INTER_AREA)
-        img = cv2.bitwise_not(img)
-        img = img.reshape(1, 784)
-        img = img.astype('float32')
-        img /= 255
+        # Check if file is valid
+        try:
+            img = np.invert(Image.open("testImages/"+menuOption ))
+            '''
+                if(len(sys.argv) == 2):
+                    img = cv2.imread(sys.argv[1])
+                    if(not img.data):
+                        print("Could not load image")
+                        exit
+            '''
+            # preprocessing
+            img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+            img = cv2.resize(img, (28, 28), interpolation=cv2.INTER_AREA)
+            #img = cv2.resize(img, (28, 28), Image.ANTIALIAS)
+            img = cv2.bitwise_not(img)
+            img = img.reshape(1, 784)
+            img = img.astype('float32')
+            img /= 255
 
-        # predict the handwritten digit in the input image
-        #score = model.predict(img, batch_size=1, verbose=0)
-        predictionB = model.predict(np.array(img, dtype=float))
+            # predict the handwritten digit in the input image
+            #score = model.predict(img, batch_size=1, verbose=0)
+            predictionB = model.predict(np.array(img, dtype=float))
 
-        print("Predicted B: ", predictionB)
-        # print(shape(predictionB))
-        bestPrediction = max(predictionB[0])
-        print("Max Pred _______",bestPrediction) 
-        counter = 0
-        for pred in predictionB[0]:
-            print (counter,"==",pred)
-            counter= counter +1
+            print("Predicted B: ", predictionB)
+            # print(shape(predictionB))
+            bestPrediction = max(predictionB[0])
+            print("Max Pred _______",bestPrediction) 
+            counter = 0
+            for pred in predictionB[0]:
+                print (counter,"==",pred)
+                counter= counter +1
 
-        #print("Actual: B", label_test[0])
+            #print("Actual: B", label_test[0])
 
-        # display scores
-        print("\nPrediction score for test input: " + menuOption)
-        
-        sort = sorted(range(len(predictionB[0])),
-                    key=lambda k: predictionB[0][k], reverse=True)
-        for index in sort:
-            print(str(index) + ": " + str(predictionB[0][index]))
-        percent = format(predictionB[0][sort[0]] * 100, '.2f')
+            # display scores
+            print("\nPrediction score for test input: " + menuOption)
+            
+            sort = sorted(range(len(predictionB[0])),
+                        key=lambda k: predictionB[0][k], reverse=True)
+            for index in sort:
+                print(str(index) + ": " + str(predictionB[0][index]))
+            percent = format(predictionB[0][sort[0]] * 100, '.2f')
 
 
-        print("\nI am " ,str(percent) ,"Confident that it is " ,str(sort[0]))
-        
+            print("\nSystem is" ,str(percent) ," that the image is " ,str(sort[0]))
+            menuOption="exit"
+        # must catch errors    
+        # File not found
+        except FileNotFoundError: 
+            print("(ERROR)--> ",menuOption," image not found !")
+        # Any other error
+        except: # If any other error occours
+            print("(ERROR)--> Generic error uploading ",menuOption) 
+            
 
 def testPrediction():
     """
@@ -243,7 +236,7 @@ def testPrediction():
         try :
             testIndex = int(testIndex)
         except ValueError:
-            print("Error - value must be an integer")
+            print("(ERROR)--> value must be an integer")
             testIndex=-1
             #buildNeuralNet()
 
@@ -285,17 +278,17 @@ def userMenu():
             if netBuilt:
                 prediction()
             else:
-                print("Neural network not configured, select option 1 and try again !")
+                print("(ERROR)--> Neural network not configured, select option 1 and try again !")
         elif choice == "3":
             if netBuilt:
                 testPrediction()
             else:
-                print("Neural network not configured, select option 1 and try again !")
+                print("(ERROR)--> Neural network not configured, select option 1 and try again !")
         elif choice == "4":
             print("\n Exiting...")
             exit()
         elif choice != "":
-            print("\n Invalid Option Try again")
+            print("\n(ERROR)--> Invalid Option Try again")
 
 
 # Launch the main menu

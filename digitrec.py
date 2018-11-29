@@ -116,12 +116,13 @@ def buildNeuralNet():
     global score
     batch_size = 128
     #num_classes = 10
-    #epochs = 1
-    #learning_rate = 1e-6
-    model = Sequential()  # Using Sequental ,Linear stack of layers
-    # add layer off input shape 784 and output shape of *532
-    model.add(Dense(512, activation='relu', input_shape=(784,)))
-    # set fraction of input rates to drop during training
+    
+   
+    # Using Sequental ,Linear stack of layers
+    # Add layer off input shape 784 and output shape of *532
+    # Set fraction of input rates to drop during training
+    model = Sequential()  
+    model.add(Dense(512, activation='relu', input_shape=(784,))) 
     model.add(Dropout(0.2))
     model.add(Dense(512, activation='relu'))
     model.add(Dropout(0.2))
@@ -228,10 +229,28 @@ def prediction():
         
 
 def testPrediction():
+    """
+    testPrediction() is used to test the model against the MNist dataset test images.
+    User input of int between 1-10000 required.
+    Input is index of image in MNIST test image dataset.
+    """
+    testIndex = -1
+    # Allow user to enter amount for epoch
+    while int(testIndex) < 1 or int(testIndex) > 10000:
+        testIndex= input("Select MNIST image to predict (index 1-10000) :")
 
-    predictionB = model.predict(np.array([image_test[0]], dtype=float))
+        # Confirm input is integer
+        try :
+            testIndex = int(testIndex)
+        except ValueError:
+            print("Error - value must be an integer")
+            testIndex=-1
+            #buildNeuralNet()
+
+    testIndex = int(testIndex-1)
+    predictionB = model.predict(np.array([image_test[testIndex]], dtype=float))
     print("Predicted B: ", predictionB)
-    print("Actual: B", label_test[0])
+    print("Actual: B", label_test[testIndex])
     # Make a prediction using Tensorflow and our classifier we created above from our testData
     # prediction = model.predict(np.array([x_test[1]], dtype=float), as_iterable=False)
     #prediction = history.predict(np.array([image_test[1]], dtype=float))
@@ -253,7 +272,7 @@ def userMenu():
     choice = True
 
     while choice:
-        print("\n==== MNIST DATASET DIGIT RECOGNITION ====\n1.Prepare Dataset and Image Recognition Model\n2.Predict an image\n3.Test & confirm Prediction Model\n4.Exit")
+        print("\n==== MNIST DATASET DIGIT RECOGNITION ====\n1.Prepare Dataset and Image Recognition Model\n2.Upload an Image to predict\n3.Predict image from MNIST test dataset\n4.Exit")
         choice = input("Select Option? ")
         if choice == "1":
             if netBuilt:

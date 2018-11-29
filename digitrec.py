@@ -89,7 +89,7 @@ def prepareDataSet():
 
 
 def buildNeuralNet():
-    print("Building Model...")
+    
     global model
     batch_size = 128
     #num_classes = 10
@@ -114,9 +114,16 @@ def buildNeuralNet():
     The RMSprop optimizer restricts the oscillations in the vertical direction.
     To prevent the gradients from blowing up, we include a parameter epsilon in the denominator which is set to a small value
     """
+    # Compile the model
+    # Using sgd gives .86 accur takinhg 18s
+    # Using RMSprop() gives .98 taking 23s 
     model.compile(loss='categorical_crossentropy',
                 optimizer=RMSprop(),
                 metrics=['accuracy'])
+
+    # Start timer and build model
+    print("\nBuilding Model...")
+    start_time_train = timeit.default_timer()
 
     # Train the model
     # verbose 1 displays progress bar
@@ -125,9 +132,15 @@ def buildNeuralNet():
                         epochs=epochs,
                         verbose=1,
                         validation_data=(image_test, label_test))
+    
+    # Stop Timer
+    print("\nModel built !")
+    end_time_train = timeit.default_timer() - start_time_train
+
     score = model.evaluate(image_test, label_test, verbose=0)
     print('Test loss    :', score[0])
     print('Test accuracy:', score[1])
+    print("Time Taken to train model at ",epochs,"epochs =",end_time_train)
 
 
 def prediction():

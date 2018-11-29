@@ -238,6 +238,7 @@ def testPrediction():
         except ValueError:
             print("(ERROR)--> value must be an integer")
             testIndex=-1
+            
             #buildNeuralNet()
 
     testIndex = int(testIndex-1)

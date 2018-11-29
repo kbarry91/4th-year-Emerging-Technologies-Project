@@ -19,7 +19,7 @@ from keras.models import Sequential
 from keras.layers import Dense, Dropout
 from keras.optimizers import RMSprop
 
-# load dataset
+# load dataset for global use
 (image_train, label_train), (image_test, label_test) = mnist.load_data()
 labelOptions = 10
 imageSize = 784
@@ -90,11 +90,12 @@ def prepareDataSet():
 
 def buildNeuralNet():
     print("Building Model...")
+    global model
     batch_size = 128
     #num_classes = 10
-    epochs = 2
+    epochs = 1
 
-    model = Sequential() #Linear stack of layers
+    model = Sequential() # Using Sequental ,Linear stack of layers
     model.add(Dense(512, activation='relu', input_shape=(784,)))# add layer off input shape 784 and output shape of *532
     model.add(Dropout(0.2))# set fraction of input rates to drop during training
     model.add(Dense(512, activation='relu'))
@@ -125,25 +126,51 @@ def buildNeuralNet():
                         verbose=1,
                         validation_data=(image_test, label_test))
     score = model.evaluate(image_test, label_test, verbose=0)
-    print('Test loss:', score[0])
+    print('Test loss    :', score[0])
     print('Test accuracy:', score[1])
 
+
+def prediction():
+    predictionB = model.predict(np.array([image_test[0]], dtype=float))
+    print("Predicted B: ", predictionB)
+    print("Actual: B", label_test[0])
+    # Make a prediction using Tensorflow and our classifier we created above from our testData
+    # prediction = model.predict(np.array([x_test[1]], dtype=float), as_iterable=False)
+    #prediction = history.predict(np.array([image_test[1]], dtype=float))
+    #bestPrediction= max()
+    #model.predict
+
+    # Print our prediction and display the actual image we are trying to predict
+    #print("Predicted A: ", prediction.index(max(prediction)))
+    #print("Actual: A", label_test[1])
+    
+
 def userMenu():
-   # print("tf-----",tf.__version__)
-   # print("ker---",keras.__version__)
     """
-    Launches a User menu
+    Launches a menu for user input
     """
+    
+    # print("tf-----",tf.__version__)
+    # print("ker---",keras.__version__)
+    netBuilt = False
     choice = True
+
     while choice:
-        print("==== MNIST DATASET DIDIT RECOGNITION ====\n1.Prepare and Setup image dataset\n2.buildNeuralNet\n3.Exit")
+        print("\n==== MNIST DATASET DIGIT RECOGNITION ====\n1.Prepare and Setup image dataset\n2.Predict an image\n3.Exit")
         choice = input("Select Option? ")
         if choice == "1":
-            prepareDataSet()
-            buildNeuralNet()
+            if netBuilt:
+                print("Neural network has already been configured")
+            else:
+                prepareDataSet()
+                buildNeuralNet()
+                netBuilt = True
         elif choice == "2":
-            # buildNeuralNet()
-            print("\n In choice 2...")
+            if netBuilt:
+                prediction()
+            else:
+                print("Neural network not configured, select option 1 and try again !")
+            
         elif choice == "3":
             print("\n Exiting...")
             exit()

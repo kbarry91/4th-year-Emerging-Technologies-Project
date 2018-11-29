@@ -248,8 +248,6 @@ def testPrediction():
             print("(ERROR)--> value must be an integer")
             testIndex=-1
             
-            #buildNeuralNet()
-
     testIndex = int(testIndex-1)
     # Load model
     model = load_model('my_model')
@@ -257,22 +255,15 @@ def testPrediction():
 
     # Get value of closest(MAX) prediction
     predAccuracy = max(predictionB[0])
-    # Get index of closest(MAX) prediction
+
+    # Get index of closest(MAX) prediction/actual
     predIndex = predictionB.argmax(axis=1)
+    actIndex = label_test[testIndex].argmax(axis=0)
 
-    #print(predictionB[0])
+    # Print Prediction results
+    print("\nPrediction Complete")
     print("System Predicted image is :",predIndex ,",With a accurucy of ",predAccuracy )
-    print("Predicted B: ", predictionB)
-    print("Actual: B", label_test[testIndex])
-    # Make a prediction using Tensorflow and our classifier we created above from our testData
-    # prediction = model.predict(np.array([x_test[1]], dtype=float), as_iterable=False)
-    #prediction = history.predict(np.array([image_test[1]], dtype=float))
-    #bestPrediction= max()
-    # model.predict
-
-    # Print our prediction and display the actual image we are trying to predict
-    #print("Predicted A: ", prediction.index(max(prediction)))
-    #print("Actual: A", label_test[1])
+    print("Actual Image is: ", actIndex)
 
 def userMenu():
     """

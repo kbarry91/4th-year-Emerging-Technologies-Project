@@ -94,7 +94,7 @@ def buildNeuralNet():
     batch_size = 128
     #num_classes = 10
     epochs = 1
-
+    learning_rate = 1e-6
     model = Sequential() # Using Sequental ,Linear stack of layers
     model.add(Dense(512, activation='relu', input_shape=(784,)))# add layer off input shape 784 and output shape of *532
     model.add(Dropout(0.2))# set fraction of input rates to drop during training
@@ -117,8 +117,10 @@ def buildNeuralNet():
     # Compile the model
     # Using sgd gives .86 accur takinhg 18s
     # Using RMSprop() gives .98 taking 23s 
+    # rmsprop = RMSprop(lr=learning_rate) gives .28  taking 25s
+    rmsprop = RMSprop()
     model.compile(loss='categorical_crossentropy',
-                optimizer=RMSprop(),
+                optimizer=rmsprop,
                 metrics=['accuracy'])
 
     # Start timer and build model

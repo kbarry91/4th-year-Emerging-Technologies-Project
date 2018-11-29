@@ -153,7 +153,7 @@ def buildNeuralNet():
 
 def prediction():
     
-    menuOption="\nPlease enter an image name to test(Do not enter file extension) or 'quit' to return: "
+    menuOption="\nPlease enter an image name to test or (exit) to return: "
     print(menuOption)
     while menuOption != "exit":
         # Get user input
@@ -183,7 +183,16 @@ def prediction():
         # predict the handwritten digit in the input image
         #score = model.predict(img, batch_size=1, verbose=0)
         predictionB = model.predict(np.array(img, dtype=float))
+
         print("Predicted B: ", predictionB)
+        # print(shape(predictionB))
+        bestPrediction = max(predictionB[0])
+        print("Max Pred _______",bestPrediction) 
+        counter = 0
+        for pred in predictionB[0]:
+            print (counter,"==",pred)
+            counter= counter +1
+
         #print("Actual: B", label_test[0])
 
         # display scores

@@ -195,7 +195,8 @@ def prediction():
             print("Max Pred _______",bestPrediction) 
             counter = 0
             for pred in predictionB[0]:
-                print (counter,"==",pred)
+                print (counter," ")
+                print("%.5f" % (pred))
                 counter= counter +1
 
             #print("Actual: B", label_test[0])
@@ -243,6 +244,14 @@ def testPrediction():
 
     testIndex = int(testIndex-1)
     predictionB = model.predict(np.array([image_test[testIndex]], dtype=float))
+
+    # Get value of closest(MAX) prediction
+    predAccuracy = max(predictionB[0])
+    # Get index of closest(MAX) prediction
+    predIndex = predictionB.argmax(axis=1)
+    
+    #print(predictionB[0])
+    print("System Predicted image is :",predIndex ,",With a accurucy of ",predAccuracy )
     print("Predicted B: ", predictionB)
     print("Actual: B", label_test[testIndex])
     # Make a prediction using Tensorflow and our classifier we created above from our testData

@@ -8,10 +8,6 @@ import timeit
 import numpy as np
 
 import sys
-# Import tensorflow as tf
-#import tensorflow as tf
-#from tensorflow.examples.tutorials.mnist import input_data
-
 
 # https://github.com/keras-team/keras/blob/master/examples/mnist_mlp.py
 
@@ -20,6 +16,7 @@ from keras.datasets import mnist
 from keras.models import Sequential
 from keras.layers import Dense, Dropout
 from keras.optimizers import RMSprop
+
 # Import Cv2  and Imagefor image processing
 import cv2
 from PIL import Image
@@ -32,7 +29,7 @@ import os.path
 
 # load dataset for global use
 (image_train, label_train), (image_test, label_test) = mnist.load_data()
-labelOptions = 10
+labelOptions = 10#batch size
 imageSize = 784
 
 
@@ -40,33 +37,22 @@ def prepareDataSet():
     """ 
     Loads Mnist Dataset into memory and prepares images to for generation of Neural Network model.
     """
+    # Global variables to be used in other functions
     global image_train
     global image_test
     global label_train
     global label_test
 
     print("\nPreparing Mnist dataset...")
-    #  (image_train, label_train), (image_test, label_test) = mnist.load_data()
 
-    # i,j act as offsets to offest idx format
-    imageOffest = 16
-    labelOffset = 8
-
-    
-    # Reshape image data set
+    # Reshape image data set to 60000 and 10000 elements of size784
     image_train = image_train.reshape(60000, imageSize)
-    #label_train = image_train.reshape(60000, 10)
-
     image_test = image_test.reshape(10000, imageSize)
-
-    
 
     # Convert image data to type float 32
     image_train = image_train.astype('float32')
     image_test = image_test.astype('float32')
-    #imageSize = 784
 
-   
     # Values are rgb 0-255 . Convert to  0 OR  1
     image_train /= 255
     image_test /= 255
@@ -107,8 +93,6 @@ def buildNeuralNet():
     global model
     global score
     batch_size = 128
-    #num_classes = 10
-    
 
     # Using Sequental ,Linear stack of layers
     # Add layer off input shape 784 and output shape of *532
@@ -162,9 +146,8 @@ def buildNeuralNet():
     print('Test accuracy:', score[1])
     print("Time Taken to train model at ", epochs, "epochs =", end_time_train)
   
-    # Creates a file 'my_model.' to savwe model
+    # Creates a file 'my_model.' in folder models to save model
     model.save('models/nn_model')
-
 
 def prediction():
     """
@@ -185,8 +168,6 @@ def prediction():
         # Check if file is valid
         try:
             img = cv2.imread("testImages/"+menuOption)
-           # img = np.invert(Image.open("testImages/"+menuOption ))
-            #img = np.invert(Image.open("testImages/"+menuOption ))
             '''
                 if(len(sys.argv) == 2):
                     img = cv2.imread(sys.argv[1])
@@ -204,16 +185,20 @@ def prediction():
             img /= 255
 
             # predict the handwritten digit in the input image
-            #score = model.predict(img, batch_size=1, verbose=0)
+            # score = model.predict(img, batch_size=1, verbose=0)
             
             # Load model
             model = load_model('models/nn_model')
             predictionB = model.predict(np.array(img, dtype=float))
 
             print("Predicted B: ", predictionB)
-            # print(shape(predictionB))
-            bestPrediction = max(predictionB[0])
-            print("Max Pred _______",bestPrediction) 
+
+            bestPrediction = max(predictionB[0])# highest prediciton
+
+            # FOR DEBUG --- print(shape(predictionB))
+            # FOR DEBUG --- print("Max Pred _______",bestPrediction) 
+
+            # Print predictions
             counter = 0
             for pred in predictionB[0]:
                 print (counter," ")
@@ -262,10 +247,9 @@ def testPrediction():
             testIndex=-1
             
     testIndex = int(testIndex-1)
-    # Load model
+
+    # Load previously created model
     model = load_model('models/nn_model')
-    #mageToSave = ~np.array(list(image_test[testIndex])).reshape(28,28).astype(np.uint8)
-    #cv2.imwrite('testImage(s).png',imageToSave)
     predictionB = model.predict(np.array([image_test[testIndex]], dtype=float))
 
     # Get value of closest(MAX) prediction
@@ -277,58 +261,20 @@ def testPrediction():
 
     # Print Prediction results
     print("\nPrediction Complete")
-    print("System Predicted image is :",predIndex ,",With a accuracy of ",predAccuracy )
+    # print("System Predicted image is :",predIndex ,",With a accuracy of ",predAccuracy )
+    print("System Predicted image is :",predIndex ,",With a accuracy of ","{0:.0f}%".format(predAccuracy*100) )
     print("Actual Image is: ", actIndex)
-
-def saveImagesToFolder():
-    """
-    saves a selection of images to a test Images folder in the local directory
-    """
-    # Loading test sets
-    #test_image = []
-    #test_label= []
-    #testListArray=[]
-# i,j act as offsets to offest idx format 
-    print("size--------",sys.getsizeof(image_train))
-    print("size dive--------",sys.getsizeof(image_train)/784)
-
-    i=16
-    j=8
-    for x in range (5):
-        #img = image_train[i:i+imageSize]
-        #img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-        #img = cv2.resize(img, (28, 28), interpolation=cv2.INTER_AREA)
-        #img = cv2.resize(img, (28, 28), Image.ANTIALIAS)
-        #img = cv2.bitwise_not(img)
-        #img = img.reshape(1, 784)
-        #img = img.astype('float32')
-        #img /= 255
-        
-        
-        
-        #imageToSave = ~np.array(list(image_train[i:i+imageSize])).reshape(28,28).astype(np.uint8)
-
-        #labelToSave = ~np.array(list(label_train[j:j+1])).astype(np.uint8)
-        #labelToSave =int.from_bytes(label_train[j:j+1], byteorder="big")
-        imageToSave = ~np.array(list(image_train[x])).reshape(28,28).astype(np.uint8)
-        #labelToSave = ~np.array(list(label_train[x])).astype(np.uint8)
-        labelToSave =int.from_bytes(label_train[x], byteorder="big")
-        #convert image to single channel 
-        #imageToSave = cv2.cvtColor(imageToSave, cv2.COLOR_BGR2GRAY)
-
-        cv2.imwrite('testImage(' + str(labelToSave) + ').png',imageToSave)
-        
-        i += imageSize
-        j = j+1
-
-    
 
 def userMenu():
     """
     Launches a menu for user input
+    Conditions - a prediction will not be allowed to be made if nn model is not created
+    Conditions - a model will not be created a previously created model is already saved
     """
+    # FOR DEBUG AND INFO --- 
     # print("tf-----",tf.__version__)
     # print("ker---",keras.__version__)
+
     # Confirm if a saved model can be loaded
     netBuilt = False
     choice = True
@@ -336,15 +282,11 @@ def userMenu():
     if os.path.isfile('models/nn_model'):
         netBuilt = True
     
-    
-
     # Prepare the test data set
     prepareDataSet()
-    #saveImagesToFolder()
-
 
     while choice:
-        print("\n==== MNIST DATASET DIGIT RECOGNITION ====\n1.Prepare Dataset and Image Recognition Model\n2.Upload an Image to predict\n3.Predict image from MNIST test dataset\n4.Exit")
+        print("\n==== MNIST DATASET DIGIT RECOGNITION ====\n1.Prepare Dataset and Image Recognition Model\n2.Upload an Image to predict\n3.Use MNIST image to predict\n4.Exit")
         choice = input("Select Option? ")
         if choice == "1":
             if netBuilt:
@@ -368,6 +310,5 @@ def userMenu():
         elif choice != "":
             print("\n(ERROR)--> Invalid Option Try again")
 
-
-# Launch the main menu
+# Launch the main menu( Start the program)
 userMenu()

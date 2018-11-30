@@ -37,7 +37,7 @@ These instructions will get you a copy of the project up and running on your loc
 - Navigate to target directory of project in CMD
 >Git clone https://github.com/kbarry91/Emerging-Technologies.git
 
-### Install ther required libraries 
+### Install the required libraries 
 - navigate to the project directory
 > $ conda install keras
 > $ conda install numpy

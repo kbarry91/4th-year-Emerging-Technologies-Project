@@ -1,6 +1,6 @@
 # Digit recognition  script
 
-# Must import gzip to allow pyhton to read  and uncompress zip files
+# Must import gzip to allow python to read  and uncompress zip files
 import gzip
 import timeit
 
@@ -16,6 +16,7 @@ from keras.datasets import mnist
 from keras.models import Sequential
 from keras.layers import Dense, Dropout
 from keras.optimizers import RMSprop
+from keras.optimizers import Adagrad
 
 # Import Cv2  and Imagefor image processing
 import cv2

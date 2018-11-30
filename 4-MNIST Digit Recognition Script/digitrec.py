@@ -1,4 +1,4 @@
-# Digit recognition  script
+# Digit Recognition Script
 
 # Must import gzip to allow python to read  and uncompress zip files
 import gzip
@@ -6,11 +6,9 @@ import timeit
 
 # Import numpy as np
 import numpy as np
-
 import sys
 
 # https://github.com/keras-team/keras/blob/master/examples/mnist_mlp.py
-
 import keras
 from keras.datasets import mnist
 from keras.models import Sequential
@@ -30,7 +28,7 @@ import os.path
 
 # load dataset for global use
 (image_train, label_train), (image_test, label_test) = mnist.load_data()
-labelOptions = 10#batch size
+labelOptions = 10  # batch size
 imageSize = 784
 
 
@@ -70,6 +68,7 @@ def prepareDataSet():
     print(image_test.shape[0], 'test images loaded.')
     print("Preparing Mnist data Complete!")
 
+
 def buildNeuralNet():
     """
     buildNeuralNet allows a user to enter an image to predict using the prebuilt model.
@@ -79,18 +78,18 @@ def buildNeuralNet():
     menuOption = 0
     # Allow user to enter amount for epoch
     while int(menuOption) < 1 or int(menuOption) > 20:
-        menuOption= input("Select amount of steps (epochs 1-20) :")
+        menuOption = input("Select amount of steps (epochs 1-20) :")
 
         # Confirm input is integer
-        try :
+        try:
             menuOption = int(menuOption)
         except ValueError:
             print("(ERROR)--> Value must be an integer")
-            menuOption=0
-            #buildNeuralNet()
+            menuOption = 0
+            # buildNeuralNet()
 
     epochs = int(menuOption)
-   
+
     global model
     global score
     batch_size = 128
@@ -98,8 +97,8 @@ def buildNeuralNet():
     # Using Sequental ,Linear stack of layers
     # Add layer off input shape 784 and output shape of *532
     # Set fraction of input rates to drop during training
-    model = Sequential()  
-    model.add(Dense(512, activation='relu', input_shape=(784,))) 
+    model = Sequential()
+    model.add(Dense(512, activation='relu', input_shape=(784,)))
     model.add(Dropout(0.2))
     model.add(Dense(512, activation='relu'))
     model.add(Dropout(0.2))
@@ -142,13 +141,15 @@ def buildNeuralNet():
     print("\nModel built !")
     end_time_train = timeit.default_timer() - start_time_train
 
+    # Evaluate the model
     score = model.evaluate(image_test, label_test, verbose=0)
     print('Test loss    :', score[0])
     print('Test accuracy:', score[1])
     print("Time Taken to train model at ", epochs, "epochs =", end_time_train)
-  
+
     # Creates a file 'my_model.' in folder models to save model
     model.save('models/nn_model')
+
 
 def prediction():
     """
@@ -156,22 +157,22 @@ def prediction():
     image to upload must be located in "testImages/" directory.
     """
 
-    menuOption="\nPlease enter an image name to test or (exit) to return: "
+    menuOption = "\nPlease enter an image name to test or (exit) to return: "
 
     print(menuOption)
     while menuOption != "exit":
         # Get user input
-        menuOption= input("Image Name :")
+        menuOption = input("Image Name :")
 
         # check for exit condition
-        if menuOption=="exit":
+        if menuOption == "exit":
             print("Returning to main menu...")
             break
-        
+
         # Check if file is valid
         try:
             img = cv2.imread("testImages/"+menuOption)
-            
+
             # preprocessing
             img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
             img = cv2.resize(img, (28, 28), interpolation=cv2.INTER_AREA)
@@ -183,50 +184,42 @@ def prediction():
 
             # predict the handwritten digit in the input image
             # score = model.predict(img, batch_size=1, verbose=0)
-            
+
             # Load model
             model = load_model('models/nn_model')
             predictionB = model.predict(np.array(img, dtype=float))
 
-           
-
             # FOR DEBUG --- bestPrediction = max(predictionB[0])# highest prediciton
             # FOR DEBUG --- print(shape(predictionB))
-            # FOR DEBUG --- print("Max Pred _______",bestPrediction) 
+            # FOR DEBUG --- print("Max Pred _______",bestPrediction)
             # FOR DEBUG --- print("Predicted B: ", predictionB)
-
-            # Print predictions
-            #counter = 0
-            #for pred in predictionB[0]:
-            #    print (counter," ")
-            #    print("%.5f" % (pred))
-            #    print("{0:.2f}%".format(pred*100))
-            #    counter= counter +1
-
-            #print("Actual: B", label_test[0])
 
             # Print Prediction results
             print("\nPrediction Complete")
-            print("\nPrediction score for test input(Highest to lowest possible outcome): " + menuOption)
-            
+            print(
+                "\nPrediction score for test input(Highest to lowest possible outcome): " + menuOption)
+
             # Sort predictions from highest to lowest
             sort = sorted(range(len(predictionB[0])),
-                        key=lambda k: predictionB[0][k], reverse=True)
+                          key=lambda k: predictionB[0][k], reverse=True)
             for index in sort:
-                print("Image ",str(index) + ": " + "{0:.4f}%".format(predictionB[0][index]*100))
+                print("Image ", str(index) + ": " +
+                      "{0:.4f}%".format(predictionB[0][index]*100))
 
-            print("\nSystem has predicted that the image is " ,str(sort[0])," with an accuracy of","{0:.2f}%".format(predictionB[0][sort[0]]*100)  )
+            print("\nSystem has predicted that the image is ", str(
+                sort[0]), " with an accuracy of", "{0:.2f}%".format(predictionB[0][sort[0]]*100))
 
-            menuOption="exit"
+            menuOption = "exit"
 
-        # must catch errors    
+        # must catch errors
         # File not found
-        except FileNotFoundError: 
-            print("(ERROR)--> ",menuOption," image not found !")
+        except FileNotFoundError:
+            print("(ERROR)--> ", menuOption, " image not found !")
         # Any other error
-        except: # If any other error occours
-            print("(ERROR)--> Generic error uploading ",menuOption) 
-            
+        except:  # If any other error occours
+            print("(ERROR)--> Generic error uploading ", menuOption)
+
+
 def testPrediction():
     """
     testPrediction() is used to test the model against the MNist dataset test images.
@@ -236,15 +229,15 @@ def testPrediction():
     testIndex = -1
     # Allow user to enter amount for epoch
     while int(testIndex) < 1 or int(testIndex) > 10000:
-        testIndex= input("Select MNIST image to predict (index 1-10000) :")
+        testIndex = input("Select MNIST image to predict (index 1-10000) :")
 
         # Confirm input is integer
-        try :
+        try:
             testIndex = int(testIndex)
         except ValueError:
             print("(ERROR)--> value must be an integer")
-            testIndex=-1
-            
+            testIndex = -1
+
     testIndex = int(testIndex-1)
 
     # Load previously created model
@@ -262,8 +255,10 @@ def testPrediction():
     print("\nPrediction Complete")
 
     # Output formatted result to console
-    print("System Predicted image is :",predIndex ,",With a accuracy of ","{0:.4f}%".format(predAccuracy*100) )
+    print("System Predicted image is :", predIndex,
+          ",With a accuracy of ", "{0:.4f}%".format(predAccuracy*100))
     print("Actual Image is: ", actIndex)
+
 
 def userMenu():
     """
@@ -271,7 +266,7 @@ def userMenu():
     Conditions - a prediction will not be allowed to be made if nn model is not created
     Conditions - a model will not be created a previously created model is already saved
     """
-    # FOR DEBUG AND INFO --- 
+    # FOR DEBUG AND INFO ---
     # print("tf-----",tf.__version__)
     # print("ker---",keras.__version__)
 
@@ -281,7 +276,7 @@ def userMenu():
 
     if os.path.isfile('models/nn_model'):
         netBuilt = True
-    
+
     # Prepare the test data set
     prepareDataSet()
 
@@ -298,17 +293,20 @@ def userMenu():
             if netBuilt:
                 prediction()
             else:
-                print("(ERROR)--> Neural network not configured, select option 1 and try again !")
+                print(
+                    "(ERROR)--> Neural network not configured, select option 1 and try again !")
         elif choice == "3":
             if netBuilt:
                 testPrediction()
             else:
-                print("(ERROR)--> Neural network not configured, select option 1 and try again !")
+                print(
+                    "(ERROR)--> Neural network not configured, select option 1 and try again !")
         elif choice == "4":
             print("\n Exiting...")
             exit()
         elif choice != "":
             print("\n(ERROR)--> Invalid Option Try again")
+
 
 # Launch the main menu( Start the program)
 userMenu()

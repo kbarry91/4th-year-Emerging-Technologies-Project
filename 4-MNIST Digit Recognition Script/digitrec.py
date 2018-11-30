@@ -52,14 +52,21 @@ def prepareDataSet():
     imageOffest = 16
     labelOffset = 8
 
+    
     # Reshape image data set
     image_train = image_train.reshape(60000, imageSize)
+    #label_train = image_train.reshape(60000, 10)
+
     image_test = image_test.reshape(10000, imageSize)
+
+    
 
     # Convert image data to type float 32
     image_train = image_train.astype('float32')
     image_test = image_test.astype('float32')
+    #imageSize = 784
 
+   
     # Values are rgb 0-255 . Convert to  0 OR  1
     image_train /= 255
     image_test /= 255
@@ -177,7 +184,9 @@ def prediction():
         
         # Check if file is valid
         try:
-            img = np.invert(Image.open("testImages/"+menuOption ))
+            img = cv2.imread("testImages/"+menuOption)
+           # img = np.invert(Image.open("testImages/"+menuOption ))
+            #img = np.invert(Image.open("testImages/"+menuOption ))
             '''
                 if(len(sys.argv) == 2):
                     img = cv2.imread(sys.argv[1])
@@ -188,7 +197,7 @@ def prediction():
             # preprocessing
             img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
             img = cv2.resize(img, (28, 28), interpolation=cv2.INTER_AREA)
-            #img = cv2.resize(img, (28, 28), Image.ANTIALIAS)
+            img = cv2.resize(img, (28, 28), Image.ANTIALIAS)
             img = cv2.bitwise_not(img)
             img = img.reshape(1, 784)
             img = img.astype('float32')
@@ -255,6 +264,8 @@ def testPrediction():
     testIndex = int(testIndex-1)
     # Load model
     model = load_model('models/nn_model')
+    #mageToSave = ~np.array(list(image_test[testIndex])).reshape(28,28).astype(np.uint8)
+    #cv2.imwrite('testImage(s).png',imageToSave)
     predictionB = model.predict(np.array([image_test[testIndex]], dtype=float))
 
     # Get value of closest(MAX) prediction
@@ -269,11 +280,53 @@ def testPrediction():
     print("System Predicted image is :",predIndex ,",With a accuracy of ",predAccuracy )
     print("Actual Image is: ", actIndex)
 
+def saveImagesToFolder():
+    """
+    saves a selection of images to a test Images folder in the local directory
+    """
+    # Loading test sets
+    #test_image = []
+    #test_label= []
+    #testListArray=[]
+# i,j act as offsets to offest idx format 
+    print("size--------",sys.getsizeof(image_train))
+    print("size dive--------",sys.getsizeof(image_train)/784)
+
+    i=16
+    j=8
+    for x in range (5):
+        #img = image_train[i:i+imageSize]
+        #img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+        #img = cv2.resize(img, (28, 28), interpolation=cv2.INTER_AREA)
+        #img = cv2.resize(img, (28, 28), Image.ANTIALIAS)
+        #img = cv2.bitwise_not(img)
+        #img = img.reshape(1, 784)
+        #img = img.astype('float32')
+        #img /= 255
+        
+        
+        
+        #imageToSave = ~np.array(list(image_train[i:i+imageSize])).reshape(28,28).astype(np.uint8)
+
+        #labelToSave = ~np.array(list(label_train[j:j+1])).astype(np.uint8)
+        #labelToSave =int.from_bytes(label_train[j:j+1], byteorder="big")
+        imageToSave = ~np.array(list(image_train[x])).reshape(28,28).astype(np.uint8)
+        #labelToSave = ~np.array(list(label_train[x])).astype(np.uint8)
+        labelToSave =int.from_bytes(label_train[x], byteorder="big")
+        #convert image to single channel 
+        #imageToSave = cv2.cvtColor(imageToSave, cv2.COLOR_BGR2GRAY)
+
+        cv2.imwrite('testImage(' + str(labelToSave) + ').png',imageToSave)
+        
+        i += imageSize
+        j = j+1
+
+    
+
 def userMenu():
     """
     Launches a menu for user input
     """
-    
     # print("tf-----",tf.__version__)
     # print("ker---",keras.__version__)
     # Confirm if a saved model can be loaded
@@ -283,9 +336,12 @@ def userMenu():
     if os.path.isfile('models/nn_model'):
         netBuilt = True
     
+    
 
     # Prepare the test data set
     prepareDataSet()
+    #saveImagesToFolder()
+
 
     while choice:
         print("\n==== MNIST DATASET DIGIT RECOGNITION ====\n1.Prepare Dataset and Image Recognition Model\n2.Upload an Image to predict\n3.Predict image from MNIST test dataset\n4.Exit")

@@ -1,29 +1,6 @@
 <p align="center">
   <img src = "https://i.imgur.com/wsqbmaa.png/">
 </p>
-- [Emerging Technologies Project](#emerging-technologies-project)
-    - [Motivation](#motivation)
-    - [Introduction](#introduction)
-    - [Prerequisities](#prerequisities)
-    - [Getting Started](#getting-started)
-    - [Downloading the project](#downloading-the-project)
-            - [Using the zip file](#using-the-zip-file)
-            - [Alternatively using GIT](#alternatively-using-git)
-        - [Install ther required libraries](#install-ther-required-libraries)
-    - [Run The project](#run-the-project)
-        - [Run The Jupyter notebooks](#run-the-jupyter-notebooks)
-        - [Running the Python script](#running-the-python-script)
-    - [Contents](#contents)
-        - [NumPy Random Notebook](#numpy-random-notebook)
-        - [Iris Dataset Notebook](#iris-dataset-notebook)
-        - [MNIST Dataset Notebook](#mnist-dataset-notebook)
-        - [MNIST Digit Recognition Script](#mnist-digit-recognition-script)
-        - [MNIST Digit Recognition Notebook](#mnist-digit-recognition-notebook)
-    - [Authors](#authors)
-    - [Acknowledgments And References](#acknowledgments-and-references)
-
-<small><i><a href='http://ecotrust-canada.github.io/markdown-toc/'>Table of contents generated with markdown-toc</a></i></small>
-
 
 # Emerging Technologies Project
 ## Motivation

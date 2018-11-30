@@ -154,7 +154,9 @@ def prediction():
     prediction() converts a user entered image to a numpy array and predicts its outcome.
     image to upload must be located in "testImages/" directory.
     """
+
     menuOption="\nPlease enter an image name to test or (exit) to return: "
+
     print(menuOption)
     while menuOption != "exit":
         # Get user input
@@ -168,13 +170,7 @@ def prediction():
         # Check if file is valid
         try:
             img = cv2.imread("testImages/"+menuOption)
-            '''
-                if(len(sys.argv) == 2):
-                    img = cv2.imread(sys.argv[1])
-                    if(not img.data):
-                        print("Could not load image")
-                        exit
-            '''
+            
             # preprocessing
             img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
             img = cv2.resize(img, (28, 28), interpolation=cv2.INTER_AREA)
@@ -191,34 +187,37 @@ def prediction():
             model = load_model('models/nn_model')
             predictionB = model.predict(np.array(img, dtype=float))
 
-            print("Predicted B: ", predictionB)
+           
 
-            bestPrediction = max(predictionB[0])# highest prediciton
-
+            # FOR DEBUG --- bestPrediction = max(predictionB[0])# highest prediciton
             # FOR DEBUG --- print(shape(predictionB))
             # FOR DEBUG --- print("Max Pred _______",bestPrediction) 
+            # FOR DEBUG --- print("Predicted B: ", predictionB)
 
             # Print predictions
-            counter = 0
-            for pred in predictionB[0]:
-                print (counter," ")
-                print("%.5f" % (pred))
-                counter= counter +1
+            #counter = 0
+            #for pred in predictionB[0]:
+            #    print (counter," ")
+            #    print("%.5f" % (pred))
+            #    print("{0:.2f}%".format(pred*100))
+            #    counter= counter +1
 
             #print("Actual: B", label_test[0])
 
-            # display scores
-            print("\nPrediction score for test input: " + menuOption)
+            # Print Prediction results
+            print("\nPrediction Complete")
+            print("\nPrediction score for test input(Highest to lowest possible outcome): " + menuOption)
             
+            # Sort predictions from highest to lowest
             sort = sorted(range(len(predictionB[0])),
                         key=lambda k: predictionB[0][k], reverse=True)
             for index in sort:
-                print(str(index) + ": " + str(predictionB[0][index]))
-            percent = format(predictionB[0][sort[0]] * 100, '.2f')
+                print("Image ",str(index) + ": " + "{0:.4f}%".format(predictionB[0][index]*100))
 
+            print("\nSystem has predicted that the image is " ,str(sort[0])," with an accuracy of","{0:.2f}%".format(predictionB[0][sort[0]]*100)  )
 
-            print("\nSystem is" ,str(percent) ," that the image is " ,str(sort[0]))
             menuOption="exit"
+
         # must catch errors    
         # File not found
         except FileNotFoundError: 
@@ -227,7 +226,6 @@ def prediction():
         except: # If any other error occours
             print("(ERROR)--> Generic error uploading ",menuOption) 
             
-
 def testPrediction():
     """
     testPrediction() is used to test the model against the MNist dataset test images.
@@ -261,8 +259,9 @@ def testPrediction():
 
     # Print Prediction results
     print("\nPrediction Complete")
-    # print("System Predicted image is :",predIndex ,",With a accuracy of ",predAccuracy )
-    print("System Predicted image is :",predIndex ,",With a accuracy of ","{0:.0f}%".format(predAccuracy*100) )
+
+    # Output formatted result to console
+    print("System Predicted image is :",predIndex ,",With a accuracy of ","{0:.4f}%".format(predAccuracy*100) )
     print("Actual Image is: ", actIndex)
 
 def userMenu():

@@ -1,6 +1,29 @@
 <p align="center">
   <img src = "https://i.imgur.com/wsqbmaa.png/">
 </p>
+- [Emerging Technologies Project](#emerging-technologies-project)
+    - [Motivation](#motivation)
+    - [Introduction](#introduction)
+    - [Prerequisities](#prerequisities)
+    - [Getting Started](#getting-started)
+    - [Downloading the project](#downloading-the-project)
+            - [Using the zip file](#using-the-zip-file)
+            - [Alternatively using GIT](#alternatively-using-git)
+        - [Install ther required libraries](#install-ther-required-libraries)
+    - [Run The project](#run-the-project)
+        - [Run The Jupyter notebooks](#run-the-jupyter-notebooks)
+        - [Running the Python script](#running-the-python-script)
+    - [Contents](#contents)
+        - [NumPy Random Notebook](#numpy-random-notebook)
+        - [Iris Dataset Notebook](#iris-dataset-notebook)
+        - [MNIST Dataset Notebook](#mnist-dataset-notebook)
+        - [MNIST Digit Recognition Script](#mnist-digit-recognition-script)
+        - [MNIST Digit Recognition Notebook](#mnist-digit-recognition-notebook)
+    - [Authors](#authors)
+    - [Acknowledgments And References](#acknowledgments-and-references)
+
+<small><i><a href='http://ecotrust-canada.github.io/markdown-toc/'>Table of contents generated with markdown-toc</a></i></small>
+
 
 # Emerging Technologies Project
 ## Motivation
@@ -87,10 +110,6 @@ A Python script that takes an image ﬁle containing a handwritten digit and ide
 
 ### MNIST Digit Recognition Notebook
 This function of this Jupyter notebook is to explain how the python script [Source link to script](https://github.com/kbarry91/Emerging-Technologies/tree/master/4-MNIST%20Digit%20Recognition%20Script) works and to discuss its performance.".
-
-## Research 
-In order to develope this application alot of effort went into research as UWP was a new platform to me. The microsoft docs available at https://docs.microsoft.com/en-us/windows/uwp/ provided alot of insight as to how this app could be developed. Any code adapted from external sources has been clearly referenced through the code files.
-
 
 ## Authors
 * **Kevin Barry** - *Initial work* - [kbarry91](https://github.com/kbarry91)
